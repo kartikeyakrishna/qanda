@@ -130,7 +130,8 @@ function renderQuestions(){
     card.className = 'card';
     const qdiv = document.createElement('div');
     qdiv.className = 'question';
-    qdiv.textContent = (idx+1)+'. '+q.question;
+    const displayNumber = (pageIndex * PAGE_SIZE) + idx + 1; // global within current session selection
+    qdiv.textContent = displayNumber + '. ' + q.question;
     card.appendChild(qdiv);
 
     const opts = document.createElement('div');
