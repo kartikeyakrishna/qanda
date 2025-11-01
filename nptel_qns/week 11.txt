@@ -1,0 +1,108 @@
+Assignment submitted on 2025-10-02, 15:26 IST
+1 point
+Assume that you build a document–term matrix M (rows: documents; columns: words) and take its thin SVD M = U Σ Vᵀ. Which statement is most accurate for interpreting V in classical Latent Semantic Analysis (LSA)?
+ Columns of V (and rows of Vᵀ) give low-dimensional word representations that capture co-occurrence similarity.
+ V gives only document embeddings, words are in U.
+ V and U are not orthonormal in LSA.
+ Σ can be ignored without affecting similarity.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Columns of V (and rows of Vᵀ) give low-dimensional word representations that capture co-occurrence similarity.
+1 point
+Which statements correctly characterize the basic DistMult approach for knowledge graph completion?
+ Each relation 𝑟 is parameterized by a full D×D matrix that can capture asymmetric relations.
+ The relation embedding is a diagonal matrix, leading to a multiplicative interaction of entity embeddings.
+ DistMult struggles with non-symmetric relations because score(s, r, o) = asT Mr ao is inherently symmetric in s and o.
+ DistMult’s performance is typically tested only on fully symmetric KGs.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+The relation embedding is a diagonal matrix, leading to a multiplicative interaction of entity embeddings.
+DistMult struggles with non-symmetric relations because score(s, r, o) = asT Mr ao is inherently symmetric in s and o.
+1 point
+Given a doc–term matrix M, what do MᵀM and MMᵀ capture?
+ MᵀM: word–word co-occurrence similarity across documents
+ MMᵀ: document–document similarity via shared terms
+ Both are identity matrices by construction
+ MᵀM counts how often a word appears in the corpus total
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+MᵀM: word–word co-occurrence similarity across documents
+MMᵀ: document–document similarity via shared terms
+1 point
+Which best describes the main advantage of using a factorized representation (e.g., DistMult, ComplEx) for large KGs?
+ It enforces that every relation in the KG be perfectly symmetric.
+ It ensures each entity is stored as a one-hot vector, simplifying nearest-neighbour queries.
+ It collapses the entire KG into a single scalar value.
+ It significantly reduces parameters and enables generalization to unseen triples by capturing low-rank structure.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+It significantly reduces parameters and enables generalization to unseen triples by capturing low-rank structure.
+1 point
+Which statement best describes the reshaping of a 3D KG tensor X ∈R|E|×|R|×|E| into a matrix factorization problem?
+ One axis remains for subject, one axis remains for object, and relations are combined into a single expanded axis.
+ The subject dimension is repeated to match the relation dimension, resulting in a 2D matrix.
+ Each subject–relation pair is collapsed into a single dimension, while objects remain as separate entries.
+ The entire KG is vectorized into a 1D array and then factorized with an SVD approach.
+No, the answer is incorrect.
+Score: 0
+Accepted Answers:
+Each subject–relation pair is collapsed into a single dimension, while objects remain as separate entries.
+1 point
+SimplE addresses asymmetry by:
+ Using separate subject and object embeddings per entity and including inverse relations, with an averaged score over the two directions
+ Constraining relation vectors to unit modulus
+ Replacing dot-products by max-pooling
+ Removing inverse relations entirely
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Using separate subject and object embeddings per entity and including inverse relations, with an averaged score over the two directions
+1 point
+Which of the following statements correctly describe hyperbolic (Poincare) embeddings for hierarchical data?
+ They map nodes onto a disk (or ball) such that large branching factors can be represented with lower distortion than in Euclidean space.
+ Distance grows slowly near the center and becomes infinite near the boundary, making it naturally suited for tree-like structures.
+ They require each node to be embedded on the surface of the Poincare disk of radius 1.
+ They can achieve arbitrarily low distortion embeddings for trees with the same dimension as Euclidean space.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+They map nodes onto a disk (or ball) such that large branching factors can be represented with lower distortion than in Euclidean space.
+Distance grows slowly near the center and becomes infinite near the boundary, making it naturally suited for tree-like structures.
+1 point
+Why might a partial-order-based approach (like order embeddings) be beneficial for modelling ‘is-a’ relationships compared to purely distance-based approaches?
+ They explicitly encode the ancestor–descendant relation as a coordinate-wise inequality or containment.
+ They can represent negative correlations (i.e., sibling vs. ancestor) more easily than distance metrics.
+ They inherently guarantee transitive closure of the hierarchy in the learned embedding space.
+ They do not rely on pairwise distances but use a notion of coordinate-wise ordering or interval containment.
+No, the answer is incorrect.
+Score: 0
+Accepted Answers:
+They explicitly encode the ancestor–descendant relation as a coordinate-wise inequality or containment.
+They do not rely on pairwise distances but use a notion of coordinate-wise ordering or interval containment.
+1 point
+Which statement about box embeddings in hierarchical modelling is most accurate?
+ Each entity or type is assigned a single real-valued vector, ignoring bounding volumes.
+ Containment Ix ⊆ Iy all dimensions encodes x≺y .
+ They rely on spherical distances around a central node to measure tree depth.
+ They cannot be used to represent set intersections or partial overlap.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Containment Ix ⊆ Iy all dimensions encodes x≺y .
+1 point
+For order embeddings with axis-aligned open cones:
+ Represent each item x by apex ux ; encode x ≺ y as ux ≥ uy (element-wise).
+ Positive loss encourages all dimensions to satisfy the order ; negative loss enforces at least one dimension to violate it.
+ All cones (and their intersections) have the same measure in this construction.
+ This makes modeling negative correlation between sibling types difficult.
+Partially Correct.
+Score: 0.75
+Accepted Answers:
+Represent each item x by apex ux ; encode x ≺ y as ux ≥ uy (element-wise).
+Positive loss encourages all dimensions to satisfy the order ; negative loss enforces at least one dimension to violate it.
+All cones (and their intersections) have the same measure in this construction.
+This makes modeling negative correlation between sibling types difficult.

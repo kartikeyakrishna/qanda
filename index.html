@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Q Randomizer Practice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Question Randomizer</h1>
+      <p class="sub">Choose number of questions and practice — answers shown after submit.</p>
+    </header>
+
+    <section class="controls">
+      <label for="count">Select:</label>
+      <select id="count">
+        <option value="10">10 questions</option>
+        <option value="all">All questions</option>
+      </select>
+      <label><input type="checkbox" id="sequential"> Sequential order</label>
+      <button id="startBtn">Randomize & Start</button>
+      <button id="reshuffle" class="muted">Randomize Again</button>
+    </section>
+
+    <section id="qarea" class="qarea"></section>
+
+    <section id="results" class="results" hidden>
+      <h2>Results</h2>
+      <div id="score"></div>
+      <button id="tryAgain">Try Again</button>
+    </section>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

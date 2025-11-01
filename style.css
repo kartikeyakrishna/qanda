@@ -1,0 +1,50 @@
+/* Simple modern card-based style */
+:root{
+  --bg:#0f1724;
+  --card:#0b1220;
+  --accent:#7dd3fc;
+  --muted:#9ca3af;
+  --card-2:#0b1228;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#071026 0%, #071a2a 100%);
+  color:#e6eef7;
+  min-height:100vh;
+  padding:32px;
+}
+.container{
+  max-width:980px;margin:0 auto;
+}
+header h1{margin:0;font-size:28px}
+header .sub{color:var(--muted);margin-top:6px}
+.controls{
+  display:flex;gap:12px;align-items:center;margin:18px 0 24px;
+}
+select, button{
+  padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color:inherit;font-size:14px;
+}
+button#startBtn{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#022;}
+button.muted{background:transparent;border:1px dashed rgba(255,255,255,0.04);color:var(--muted)}
+.qarea .card{
+  background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;margin-bottom:12px;
+  box-shadow:0 6px 18px rgba(2,6,23,0.6);
+}
+.question{font-weight:600;margin-bottom:8px}
+.options label{display:block;padding:6px 8px;border-radius:8px;margin:6px 0;cursor:pointer;border:1px solid transparent}
+.options input{margin-right:8px}
+.options label:hover{background:rgba(255,255,255,0.02)}
+.correct{background:rgba(34,197,94,0.22);border-color:rgba(34,197,94,0.6);box-shadow:inset 0 0 0 1px rgba(34,197,94,0.5);color:#dcfce7}
+.wrong{background:rgba(239,68,68,0.22);border-color:rgba(239,68,68,0.6);box-shadow:inset 0 0 0 1px rgba(239,68,68,0.5);color:#fee2e2}
+.options label.correct:hover{background:rgba(34,197,94,0.22)}
+.options label.wrong:hover{background:rgba(239,68,68,0.22)}
+.expl{margin-top:8px;color:var(--muted);font-size:13px;padding-top:6px;border-top:1px dashed rgba(255,255,255,0.02)}
+.results{margin-top:18px;background:rgba(255,255,255,0.02);padding:16px;border-radius:12px}
+#score{font-size:18px;margin-bottom:12px}
+@media (max-width:600px){
+  .controls{flex-direction:column;align-items:stretch}
+}

@@ -1,0 +1,107 @@
+Week 9 : Assignment 9
+The due date for submitting this assignment has passed.
+Due on 2025-09-24, 23:59 IST.
+Assignment submitted on 2025-09-18, 16:36 IST
+1 point
+In the knowledge-graph training pipeline that models P(o ∣ s, r) with a softmax over all entities, what practical difficulty motivates the use of negative sampling?
+ The softmax is undefined for KG scores.
+ The denominator sums over all entities, which is computationally expensive.
+ The numerator requires the full adjacency list for each relation.
+ The scores must be normalized per relation rather than globally.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+The denominator sums over all entities, which is computationally expensive.
+1 point
+Which statements correctly characterize the local closed-world assumption in KG training with negative sampling?
+ Any unobserved triple is treated as false for training purposes.
+ It is strictly correct because KGs are exhaustive.
+ It helps training but may mislabel genuinely missing positives as negatives.
+ It eliminates the need for development/test splits.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Any unobserved triple is treated as false for training purposes.
+It helps training but may mislabel genuinely missing positives as negatives.
+1 point
+For discriminative training, why is it infeasible to enforce all constraints f(s, r, o) ≥ m + f(s′,r,o′) over every possible negative triple?
+ The number of possible facts is O(E2R), overwhelmingly larger than positives.
+ Because scores cannot be compared across relations.
+ Because margins must be tuned per entity.
+ Because negatives are always ambiguous.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+The number of possible facts is O(E2R), overwhelmingly larger than positives.
+1 point
+Which statement best describes score polarity in KG models?
+ Scores must always be larger for false triples.
+ Score polarity is fixed by the dataset.
+ Some models use higher scores for more plausible triples, others use lower, and probabilities/losses can be adapted accordingly.
+ Polarity only matters for RotatE
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Some models use higher scores for more plausible triples, others use lower, and probabilities/losses can be adapted accordingly.
+1 point
+Compared to semantic interpretation (logical-form execution), a differentiable KGQA system:
+ Requires a hand-coded logical form for every question.
+ Cannot be trained end-to-end.
+ Provides complete interpretability of reasoning steps.
+ Learns dense question and graph embeddings and uses cross-attention to align them.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Learns dense question and graph embeddings and uses cross-attention to align them.
+1 point
+Which statements correctly describe filtered evaluation?
+ It removes candidates that are true facts in train/dev from the ranked list before scoring the test query.
+ It increases fairness by not penalizing the model for ranking another correct answer that happened to be in training data.
+ It always decreases MRR.
+ It affects measures like MRR and MAP.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+It removes candidates that are true facts in train/dev from the ranked list before scoring the test query.
+It increases fairness by not penalizing the model for ranking another correct answer that happened to be in training data.
+It affects measures like MRR and MAP.
+1 point
+Which of the following best captures the motivation for KG completion?
+ KGs are complete, KG completion mainly compresses them.
+ Manual curation keeps KGs fully up-to-date.
+ KGs are useful but incomplete, so we learn embeddings and a scoring function to infer missing facts.
+ KG completion is only for alignment across languages.
+No, the answer is incorrect.
+Score: 0
+Accepted Answers:
+KGs are useful but incomplete, so we learn embeddings and a scoring function to infer missing facts.
+1 point
+Consider pairwise hinge/ReLU loss for discriminative training with margin m: max{ 0, m + f(s’k , r, o’k) − f(s, r, o) }. When does this loss become exactly zero for a given negative (s’k , r, o’k)?
+ When f(s, r, o) ≥ m + f(s’k , r, o’k)
+ When f(s, r, o) = f(s’k , r, o’k)
+ When f(s’k , r, o’k) ≥ m + f(s, r, o)
+ Only when m = 0
+No, the answer is incorrect.
+Score: 0
+Accepted Answers:
+When f(s, r, o) ≥ m + f(s’k , r, o’k)
+1 point
+Uniform negative sampling can introduce an extra bias unless you do which of the following when forming the sampled denominator?
+ Exclude the true object o from the denominator.
+ Normalize scores per relation type.
+ Sample only from entities not connected to s.
+ Always include the true object o in the denominator.
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+Always include the true object o in the denominator.
+1 point
+Which of the following is the RotatE scoring function?
+ f(s, r, o) = ‖s+r−o‖²
+ f(s, r, o) = ‖s⊙r−o‖², where r lies on the unit circle element-wise
+ f(s, r, o) = sᵀRᵣo with Rᵣ orthonormal
+ f(s, r, o) = −⟨s, r, o⟩
+Yes, the answer is correct.
+Score: 1
+Accepted Answers:
+f(s, r, o) = ‖s⊙r−o‖², where r lies on the unit circle element-wise
