@@ -1,8 +1,15 @@
 // Simple client-side Q app that loads questions.json (supports single, multi, and free-text)
 let questions = [];
+let orderedPool = [];
+let sessionPool = [];
 let sessionQs = [];
 let sequentialMode = false;
-let seqIndex = 0; // start offset for sequential paging
+let seqIndex = 0; // deprecated in favor of paging, kept for compatibility
+let currentQuestionIdx = 0; // page-local index
+let sessionSize = 0;
+const PAGE_SIZE = 10;
+let pageIndex = 0; // page 0-based
+let allMode = false; // true when user selected 'all'
 
 function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){
@@ -164,6 +171,8 @@ function renderQuestions(){
   submit.onclick = evaluate;
   submit.style.marginTop = '12px';
   document.getElementById('qarea').appendChild(submit);
+
+  buildNavigator();
 }
 
 function setsEqual(a, b){
@@ -253,7 +262,7 @@ function evaluate(){
   document.getElementById('results').hidden = false;
   document.getElementById('score').textContent = 'Score: ' + score + ' / ' + sessionQs.length;
 
-  // Show or hide Next button for sequential paging
+  // Show or hide Next/Prev buttons for paging (also available in navigator)
   const res = document.getElementById('results');
   let nextBtn = document.getElementById('nextPageBtn');
   if(!nextBtn){
@@ -264,9 +273,21 @@ function evaluate(){
     res.appendChild(nextBtn);
     nextBtn.addEventListener('click', goToNextPage);
   }
-  const pageSize = getPageSize();
-  const canNext = sequentialMode && Number.isFinite(pageSize) && (seqIndex + pageSize) < questions.length;
+  const canNext = ((pageIndex + 1) * PAGE_SIZE) < sessionSize;
   nextBtn.hidden = !canNext;
+
+  // Prev 10 button
+  let prevBtn = document.getElementById('prevPageBtn');
+  if(!prevBtn){
+    prevBtn = document.createElement('button');
+    prevBtn.id = 'prevPageBtn';
+    prevBtn.textContent = 'Prev 10';
+    prevBtn.style.marginLeft = '8px';
+    res.appendChild(prevBtn);
+    prevBtn.addEventListener('click', goToPrevPage);
+  }
+  const canPrev = pageIndex > 0;
+  prevBtn.hidden = !canPrev;
 }
 
 function startSession(){
@@ -274,48 +295,130 @@ function startSession(){
   sequentialMode = !!(document.getElementById('sequential') && document.getElementById('sequential').checked);
   // reset paging when starting fresh
   seqIndex = 0;
-  let pool = [...questions];
-  if(pool.length === 0){
+  pageIndex = 0;
+  currentQuestionIdx = 0;
+  orderedPool = [...questions];
+  if(orderedPool.length === 0){
     alert('No questions found. If opening index.html directly, please serve via a local server (e.g., VS Code Live Server) so the browser can fetch questions.json.');
     return;
   }
   // shuffle questions only if not in sequential mode
   if(!sequentialMode){
-    shuffle(pool);
+    shuffle(orderedPool);
   }
-  if(sel === 'all'){
-    sessionQs = pool;
-  } else {
-    const n = parseInt(sel,10) || 10;
-    sessionQs = sequentialMode ? pool.slice(seqIndex, Math.min(seqIndex + n, pool.length))
-                               : pool.slice(0, Math.min(n, pool.length));
-  }
-  // deep copy to avoid mutating master when shuffling options
-  sessionQs = sessionQs.map(q => ({...q, options: q.options ? q.options.map(o=>({...o})) : []}));
+  // determine session size
+  allMode = (sel === 'all');
+  sessionSize = allMode ? orderedPool.length : Math.min(parseInt(sel,10) || 10, orderedPool.length);
+  sessionPool = orderedPool.slice(0, sessionSize);
+  recalcPageSlice();
   renderQuestions();
   document.getElementById('results').hidden = true;
 }
 
-function getPageSize(){
-  const sel = document.getElementById('count').value;
-  if(sel === 'all') return Infinity;
-  const n = parseInt(sel,10);
-  return Number.isFinite(n) && n > 0 ? n : 10;
+function recalcPageSlice(){
+  const start = pageIndex * PAGE_SIZE;
+  const end = Math.min(start + PAGE_SIZE, sessionSize);
+  sessionQs = sessionPool.slice(start, end).map(q => ({...q, options: q.options ? q.options.map(o=>({...o})) : []}));
 }
 
 function goToNextPage(){
-  if(!sequentialMode) return;
-  const pageSize = getPageSize();
-  if(!Number.isFinite(pageSize)) return; // no paging when 'all'
-  const total = questions.length;
-  const newIndex = seqIndex + pageSize;
-  if(newIndex >= total) return;
-  seqIndex = newIndex;
-  // compute next slice in original order
-  const end = Math.min(seqIndex + pageSize, total);
-  sessionQs = questions.slice(seqIndex, end).map(q => ({...q, options: q.options ? q.options.map(o=>({...o})) : []}));
+  if(((pageIndex + 1) * PAGE_SIZE) >= sessionSize) return;
+  pageIndex += 1;
+  currentQuestionIdx = 0;
+  recalcPageSlice();
   renderQuestions();
   document.getElementById('results').hidden = true;
+}
+
+function goToPrevPage(){
+  if(pageIndex === 0) return;
+  pageIndex -= 1;
+  currentQuestionIdx = 0;
+  recalcPageSlice();
+  renderQuestions();
+  document.getElementById('results').hidden = true;
+}
+
+function buildNavigator(){
+  const nav = document.getElementById('navigator');
+  if(!nav) return;
+  nav.innerHTML = '';
+
+  // Paging controls
+  const prevPageBtn = document.createElement('button');
+  prevPageBtn.className = 'nav-btn';
+  prevPageBtn.textContent = 'Prev 10';
+  prevPageBtn.onclick = goToPrevPage;
+  prevPageBtn.disabled = (pageIndex === 0);
+  nav.appendChild(prevPageBtn);
+
+  const prevQ = document.createElement('button');
+  prevQ.className = 'nav-btn';
+  prevQ.textContent = 'Prev Q';
+  prevQ.onclick = () => gotoGlobalIndex(Math.max(0, pageIndex*PAGE_SIZE + currentQuestionIdx - 1));
+  nav.appendChild(prevQ);
+
+  const totalButtons = allMode ? sessionSize : sessionQs.length;
+  for(let i=0;i<totalButtons;i++){
+    const globalIdx = allMode ? i : (pageIndex*PAGE_SIZE + i);
+    const pageLocalIdx = allMode ? (globalIdx % PAGE_SIZE) : i;
+    const b = document.createElement('button');
+    const isActive = (globalIdx === (pageIndex*PAGE_SIZE + currentQuestionIdx));
+    b.className = 'nav-btn' + (isActive ? ' active' : '');
+    b.textContent = String(globalIdx + 1);
+    b.onclick = () => gotoGlobalIndex(globalIdx);
+    nav.appendChild(b);
+  }
+
+  const nextQ = document.createElement('button');
+  nextQ.className = 'nav-btn';
+  nextQ.textContent = 'Next Q';
+  nextQ.onclick = () => gotoGlobalIndex(Math.min(sessionSize - 1, pageIndex*PAGE_SIZE + currentQuestionIdx + 1));
+  nav.appendChild(nextQ);
+
+  const nextPageBtn = document.createElement('button');
+  nextPageBtn.className = 'nav-btn';
+  nextPageBtn.textContent = 'Next 10';
+  nextPageBtn.onclick = goToNextPage;
+  nextPageBtn.disabled = (((pageIndex + 1) * PAGE_SIZE) >= sessionSize);
+  nav.appendChild(nextPageBtn);
+
+  // Jump input
+  const jumpWrap = document.createElement('div');
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.min = '1';
+  input.max = String(sessionSize);
+  input.placeholder = 'Go to #';
+  input.style.marginLeft = '8px';
+  input.style.width = '90px';
+  input.id = 'jumpInput';
+  const goBtn = document.createElement('button');
+  goBtn.className = 'nav-btn';
+  goBtn.textContent = 'Go';
+  goBtn.style.marginLeft = '6px';
+  goBtn.onclick = () => {
+    const val = parseInt(input.value, 10);
+    if(Number.isFinite(val)){
+      gotoGlobalIndex(Math.max(0, Math.min(sessionSize-1, val-1)));
+    }
+  };
+  jumpWrap.appendChild(input);
+  jumpWrap.appendChild(goBtn);
+  nav.appendChild(jumpWrap);
+}
+
+function gotoGlobalIndex(gIdx){
+  const clamped = Math.max(0, Math.min(sessionSize - 1, gIdx));
+  pageIndex = Math.floor(clamped / PAGE_SIZE);
+  currentQuestionIdx = clamped % PAGE_SIZE;
+  recalcPageSlice();
+  renderQuestions();
+  // Scroll after render
+  const cards = document.querySelectorAll('#qarea .card');
+  if(cards[currentQuestionIdx]){
+    cards[currentQuestionIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 document.getElementById('startBtn').addEventListener('click', startSession);

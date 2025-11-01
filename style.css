@@ -28,6 +28,10 @@ select, button{
   background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   color:inherit;font-size:14px;
 }
+/* Improve dropdown contrast and options */
+select{background-color:var(--card);color:#e6eef7}
+select:focus{outline:1px solid var(--accent)}
+select option{background-color:var(--card);color:#e6eef7}
 button#startBtn{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#022;}
 button.muted{background:transparent;border:1px dashed rgba(255,255,255,0.04);color:var(--muted)}
 .qarea .card{
@@ -48,3 +52,7 @@ button.muted{background:transparent;border:1px dashed rgba(255,255,255,0.04);col
 @media (max-width:600px){
   .controls{flex-direction:column;align-items:stretch}
 }
+/* Navigator */
+.navigator{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 16px}
+.nav-btn{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit;font-size:13px;cursor:pointer}
+.nav-btn.active{border-color:rgba(125,211,252,0.6);box-shadow:0 0 0 1px rgba(125,211,252,0.3) inset;background:rgba(125,211,252,0.15)}
